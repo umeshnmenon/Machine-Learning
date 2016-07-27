@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="D:/SentimentAnalysis/softwares/stanford-corenlp-full-2015-12-09/stanford-corenlp-3.6.0.jar"/>
+	<classpathentry kind="lib" path="D:/SentimentAnalysis/softwares/stanford-corenlp-full-2015-12-09/ejml-0.23.jar"/>
+	<classpathentry kind="lib" path="D:/SentimentAnalysis/softwares/stanford-corenlp-full-2015-12-09/joda-time.jar"/>
+	<classpathentry kind="lib" path="D:/SentimentAnalysis/softwares/stanford-corenlp-full-2015-12-09/jollyday.jar"/>
+	<classpathentry kind="lib" path="D:/SentimentAnalysis/softwares/stanford-corenlp-full-2015-12-09/protobuf.jar"/>
+	<classpathentry kind="lib" path="D:/SentimentAnalysis/softwares/stanford-corenlp-full-2015-12-09/slf4j-api.jar"/>
+	<classpathentry kind="lib" path="D:/SentimentAnalysis/softwares/stanford-corenlp-full-2015-12-09/stanford-corenlp-3.6.0-models.jar"/>
+	<classpathentry kind="lib" path="D:/SentimentAnalysis/softwares/stanford-corenlp-full-2015-12-09/xom.jar"/>
+	<classpathentry kind="lib" path="D:/SentimentAnalysis/JavaBridge.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

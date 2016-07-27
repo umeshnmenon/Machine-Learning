@@ -1,0 +1,2074 @@
+
+<!doctype HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!-- The usual google analytics -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-7601972-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<title>Bayes Configuration</title>
+<style>
+body{background:#FFFFFF;font-family: Sans-Serif;}
+.full{float:left;width:100%;}
+.left{width:79%; float:left;height:700px;background:#FFFFFF;margin-top:5px;}
+.right{width:20%;float:left;margin-left:10px;margin-top:5px;}
+#logo{float:left; font-size:20px;font-weight:bold;color:#4487FA; width:16.4%;}
+.link{float:left;font-size:14px;color:#4487FA; margin-top:5px;}
+.link a{text-decoration:none;color:#4487FA;}
+.link a:hover{text-decoration:none;color:#4487FA;}
+.link a:selected{text-decoration:none;color:#4487FA;}
+.link a:active{text-decoration:none;color:#4487FA;}
+.instructions{margin-top:20px; margin-left:30px;float:left;width:95%;}
+#canvas_bayes{margin:0px;float:left;border:solid 1px #CCCCCC;}
+#property_box{float:left;width:100%;font-size:11px;text-indent:3px;background:#FFFFFF;border-top:solid 1px #CCCCCC;border-right:solid 1px #CCCCCC;border-left:solid 1px #CCCCCC;}
+#property_box_header{width:100%;height:auto;border:solid 0px #CCCCCC;border-bottom:solid 1px #CCCCCC;}
+#property_box_header h1{font-size:14px;font-weight:bold;}
+#property_box_header p{font-size:11px;}
+.property_box_table{width:100%;height:auto; float:left;overflow:hidden;}
+.column{width:49.8%;border-left: solid 0px #CCCCCC;float:left;}
+.column:last-child{border-right:solid 0px #CCCCCC;border-left:solid 1px #CCCCCC;}
+.column ul {list-style:none;padding:0;}
+.column ul li{height:23px;border-bottom:solid 1px #CCCCCC;}
+.column ul li:first-child{margin-top:-10px;}
+.column ul li:last-child{margin-bottom:-11px;}
+.column ul.key li{padding-top:5px;height:18px;overflow:hidden;text-overflow: ellipsis;}
+.dynamic_props{float:left;padding:0;margin:0;}
+#property_box input{border:none;width:96%;}
+#property_box textarea{border:none;width:97%;}
+li.multitext{height:40px;border:solid 1px red;}
+.action_bar {width:100%;float:left; margin-top:10px;border:solid 0px red;}
+.action_bar ul{list-style:none;display:inline;float:left;border:solid 0px red;padding:0}
+.action_bar ul li {float:left;display:inline; border:solid 0px;width:auto;padding-left:10px;}
+.action_bar input[type=button]{float:left; width:70px; height:25px; background:#428bca;color:#FFFFFF;font-size:small;font-weight:none;border-style:none;margin-left:0px;}
+.place_holder{float:left; width:50px; height:25px;}
+.menu_bar{float:right;width:auto; padding-right:40px;}
+.menu_bar input[type=button]{float:left; width:90px; height:25px; background:#428bca;color:#FFFFFF;font-size:small;font-weight:none;border-style:none;margin-left:30px;}
+
+.fileUpload {
+	float:left;
+	position: relative;
+	overflow: hidden;
+	border-color: #357ebd;
+}
+
+.fileUpload span{
+	font-size:small;
+	
+}
+.btn-primary {
+	color: #fff;
+	background-color: #428bca;
+	border-color: #357ebd;
+	height:21px;
+	width:66px;
+	
+}
+
+.btn {
+	display: inline-block;
+	margin-bottom: 0;
+	font-weight: normal;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	background-image: none;
+	border: 1px solid transparent;
+	white-space: nowrap;
+	padding: 0px 12px;
+	font-size: 14px;
+	line-height: 1.42857143;
+	border-radius: 4px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.fileUpload input.upload {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+	cursor: pointer;
+	opacity: 0;
+	filter: alpha(opacity=0);
+}
+.results{width:98%;float:left;border-bottom:solid 1px #4487FA;min-height:100px;padding-left:30px;}
+.results_header{float:left;width:78.5%;border-bottom:solid 1px #FFFFFF;margin-top:10px;}
+.results h1{float:left; font-weight:bold; font-size:18px;color:#4487FA;}
+#result{float:left;color:#000000;width:99%; height:auto;font-size:14px;margin-bottom:10px;}
+.result_line{float:left;width:100%;margin-left:20px;margin-top:10px;}
+.formula{float:left;font-size:13px;margin-left:30px;margin-top:4px;}
+.canvas_action_bar{float:right;width:120px;padding-top:10px;}
+.canvas_action_bar input[type=button]{float:right; width:90px; height:25px; background:#428bca;color:#FFFFFF;font-size:small;font-weight:none;border-style:none;}
+</style>
+
+</head>
+<body onload="init()">
+<div class="full" style="margin-top:10px;">
+	<div id="logo">Bayes Configuration</div><div class="link"><a href="#steps">(see instructions)</a></div>
+	<div class="menu_bar">
+	<!--<input type="file" id="btnImport" value="Import" class="file_btn"/>-->
+	<div class="fileUpload btn btn-primary" style="padding-top:2px;">
+		<span>Import</span>
+		<input type="file" class="upload" id="btnImport" accept=".json*"/>
+	</div>
+	<input type="button" value="Export" onClick="exportConfig()" class="btn"/>
+	</div>
+	
+</div>
+<div class="full" style="margin-top:30px;">
+	<div class="left">
+		<canvas id="canvas_bayes" width="1100" height="700">
+		This text is displayed if your browser does not support HTML5 Canvas.
+		</canvas>
+	</div>
+	<div class="right">
+		<div id="property_box">
+			<div id="property_box_header">
+				<h1>Edit Properties</h1>
+				<p>Edit your node properties here</p>
+			</div>
+			<div class="property_box_table" id="node_property_sheet">
+			
+			</div>
+			
+		</div>
+		<div class="action_bar">
+		<ul>
+		<li><div type="button" class="place_holder"/></li>
+		<li><input type="button" value="Save" class="btn" onClick="saveConfig()"/></li>
+		<li><input type="button" value="Clear" class="btn" onClick="clearSheet()"/></li>
+		<li><div type="button" class="place_holder"/></li>
+		</ul>
+		</div>	
+	</div>
+</div>
+<div class="full" style="margin-top:10px;">
+	<div class="results">
+	<div class="results_header"><h1>Results</h1><div class="canvas_action_bar"><input type="button" class="btn" value="Calculate" onClick="calculate()"/></div></div>
+	
+	<div id="result"></div>
+	</div>
+</div>
+<div class="full" style="margin-top:30px;">
+	<div class="instructions" id="steps">
+		<svg xmlns="http://www.w3.org/2000/svg"
+                   height="500" width="100%">
+			<text x="5" y="26" font-family="sans-serif" font-size="20px" fill="#4487FA">Instructions</text>
+			<circle cx="22" cy="66" r="20" stroke="#4487FA" stroke-width="1" fill="#4487FA"/>
+			<text x="16" y="72" font-family="sans-serif" font-size="20px" fill="#FFFFFF">1</text>
+			<text x="60" y="72" font-family="sans-serif" font-size="16px" fill="#4487FA">Double click on the drawing pane to add nodes.</text>
+			<circle cx="22" cy="120" r="20" stroke="#4487FA" stroke-width="1" fill="#4487FA"/>
+			<text x="16" y="127" font-family="sans-serif" font-size="20px" fill="#FFFFFF">2</text>
+			<text x="60" y="127" font-family="sans-serif" font-size="16px" fill="#4487FA">To add an Arc, select a parent node and CTRL+select the child node.</text>
+			<circle cx="22" cy="176" r="20" stroke="#4487FA" stroke-width="1" fill="#4487FA"/>
+			<text x="16" y="183" font-family="sans-serif" font-size="20px" fill="#FFFFFF">3</text>
+			<text x="60" y="183" font-family="sans-serif" font-size="16px" fill="#4487FA">Select a node to edit its properties. Click Save to save the data.</text>
+			<circle cx="22" cy="232" r="20" stroke="#4487FA" stroke-width="1" fill="#4487FA"/>
+			<text x="16" y="239" font-family="sans-serif" font-size="20px" fill="#FFFFFF">4</text>
+			<text x="60" y="239" font-family="sans-serif" font-size="16px" fill="#4487FA">To Delete a Node or Arc, just select the shape and press Delete key.</text>
+			<circle cx="22" cy="288" r="20" stroke="#4487FA" stroke-width="1" fill="#4487FA"/>
+			<text x="16" y="295" font-family="sans-serif" font-size="20px" fill="#FFFFFF">5</text>
+			<text x="60" y="295" font-family="sans-serif" font-size="16px" fill="#4487FA">Click Calculate to compute the probabilities.</text>
+			<circle cx="22" cy="344" r="20" stroke="#4487FA" stroke-width="1" fill="#4487FA"/>
+			<text x="16" y="351" font-family="sans-serif" font-size="20px" fill="#FFFFFF">6</text>
+			<text x="60" y="351" font-family="sans-serif" font-size="16px" fill="#4487FA">Click Export to save the configuration for future use!</text>
+			<circle cx="22" cy="400" r="20" stroke="#4487FA" stroke-width="1" fill="#4487FA"/>
+			<text x="16" y="407" font-family="sans-serif" font-size="20px" fill="#FFFFFF">7</text>
+			<text x="60" y="407" font-family="sans-serif" font-size="16px" fill="#4487FA">Click Import to load from the previously saved configuration!</text>
+		</svg>
+	</div>
+</div>
+
+<script type="text/javascript">
+  function readSingleFile(evt) {
+    //Retrieve the first (and only!) File from the FileList object
+	if (!evt.target.files) return;
+    var f = evt.target.files[0]; 
+
+    if (f) {
+      var r = new FileReader();
+      r.onload = function(e) { 
+	      var contents = e.target.result;
+		/*  
+        alert( "Got the file.n" 
+              +"name: " + f.name + "\n"
+              +"type: " + f.type + "\n"
+              +"size: " + f.size + " bytesn"
+              + "starts with: " + contents.substr(1, contents.indexOf("\n"))
+        );
+		*/
+		importConfig(contents);
+      }
+      r.readAsText(f);
+	  
+    } else { 
+      alert("Failed to load file");
+    }
+  }
+
+  document.getElementById('btnImport').addEventListener('change', readSingleFile, false);
+  </script>
+  <!--<script src="FileSaver.js"></script>-->
+  <script type="text/javascript">
+  
+  /* FileSaver.js
+ *  A saveAs() FileSaver implementation.
+ *  2014-05-27
+ *
+ *  By Eli Grey, http://eligrey.com
+ *  License: X11/MIT
+ *    See https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
+ */
+
+/*global self */
+/*jslint bitwise: true, indent: 4, laxbreak: true, laxcomma: true, smarttabs: true, plusplus: true */
+
+/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
+
+var saveAs = saveAs
+  // IE 10+ (native saveAs)
+  || (typeof navigator !== "undefined" &&
+      navigator.msSaveOrOpenBlob && navigator.msSaveOrOpenBlob.bind(navigator))
+  // Everyone else
+  || (function(view) {
+	"use strict";
+	// IE <10 is explicitly unsupported
+	if (typeof navigator !== "undefined" &&
+	    /MSIE [1-9]\./.test(navigator.userAgent)) {
+		return;
+	}
+	var
+		  doc = view.document
+		  // only get URL when necessary in case Blob.js hasn't overridden it yet
+		, get_URL = function() {
+			return view.URL || view.webkitURL || view;
+		}
+		, save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a")
+		, can_use_save_link = !view.externalHost && "download" in save_link
+		, click = function(node) {
+			var event = doc.createEvent("MouseEvents");
+			event.initMouseEvent(
+				"click", true, false, view, 0, 0, 0, 0, 0
+				, false, false, false, false, 0, null
+			);
+			node.dispatchEvent(event);
+		}
+		, webkit_req_fs = view.webkitRequestFileSystem
+		, req_fs = view.requestFileSystem || webkit_req_fs || view.mozRequestFileSystem
+		, throw_outside = function(ex) {
+			(view.setImmediate || view.setTimeout)(function() {
+				throw ex;
+			}, 0);
+		}
+		, force_saveable_type = "application/octet-stream"
+		, fs_min_size = 0
+		, deletion_queue = []
+		, process_deletion_queue = function() {
+			var i = deletion_queue.length;
+			while (i--) {
+				var file = deletion_queue[i];
+				if (typeof file === "string") { // file is an object URL
+					get_URL().revokeObjectURL(file);
+				} else { // file is a File
+					file.remove();
+				}
+			}
+			deletion_queue.length = 0; // clear queue
+		}
+		, dispatch = function(filesaver, event_types, event) {
+			event_types = [].concat(event_types);
+			var i = event_types.length;
+			while (i--) {
+				var listener = filesaver["on" + event_types[i]];
+				if (typeof listener === "function") {
+					try {
+						listener.call(filesaver, event || filesaver);
+					} catch (ex) {
+						throw_outside(ex);
+					}
+				}
+			}
+		}
+		, FileSaver = function(blob, name) {
+			// First try a.download, then web filesystem, then object URLs
+			var
+				  filesaver = this
+				, type = blob.type
+				, blob_changed = false
+				, object_url
+				, target_view
+				, get_object_url = function() {
+					var object_url = get_URL().createObjectURL(blob);
+					deletion_queue.push(object_url);
+					return object_url;
+				}
+				, dispatch_all = function() {
+					dispatch(filesaver, "writestart progress write writeend".split(" "));
+				}
+				// on any filesys errors revert to saving with object URLs
+				, fs_error = function() {
+					// don't create more object URLs than needed
+					if (blob_changed || !object_url) {
+						object_url = get_object_url(blob);
+					}
+					if (target_view) {
+						target_view.location.href = object_url;
+					} else {
+						window.open(object_url, "_blank");
+					}
+					filesaver.readyState = filesaver.DONE;
+					dispatch_all();
+				}
+				, abortable = function(func) {
+					return function() {
+						if (filesaver.readyState !== filesaver.DONE) {
+							return func.apply(this, arguments);
+						}
+					};
+				}
+				, create_if_not_found = {create: true, exclusive: false}
+				, slice
+			;
+			filesaver.readyState = filesaver.INIT;
+			if (!name) {
+				name = "download";
+			}
+			if (can_use_save_link) {
+				object_url = get_object_url(blob);
+				save_link.href = object_url;
+				save_link.download = name;
+				click(save_link);
+				filesaver.readyState = filesaver.DONE;
+				dispatch_all();
+				return;
+			}
+			// Object and web filesystem URLs have a problem saving in Google Chrome when
+			// viewed in a tab, so I force save with application/octet-stream
+			// http://code.google.com/p/chromium/issues/detail?id=91158
+			if (view.chrome && type && type !== force_saveable_type) {
+				slice = blob.slice || blob.webkitSlice;
+				blob = slice.call(blob, 0, blob.size, force_saveable_type);
+				blob_changed = true;
+			}
+			// Since I can't be sure that the guessed media type will trigger a download
+			// in WebKit, I append .download to the filename.
+			// https://bugs.webkit.org/show_bug.cgi?id=65440
+			if (webkit_req_fs && name !== "download") {
+				name += ".download";
+			}
+			if (type === force_saveable_type || webkit_req_fs) {
+				target_view = view;
+			}
+			if (!req_fs) {
+				fs_error();
+				return;
+			}
+			fs_min_size += blob.size;
+			req_fs(view.TEMPORARY, fs_min_size, abortable(function(fs) {
+				fs.root.getDirectory("saved", create_if_not_found, abortable(function(dir) {
+					var save = function() {
+						dir.getFile(name, create_if_not_found, abortable(function(file) {
+							file.createWriter(abortable(function(writer) {
+								writer.onwriteend = function(event) {
+									target_view.location.href = file.toURL();
+									deletion_queue.push(file);
+									filesaver.readyState = filesaver.DONE;
+									dispatch(filesaver, "writeend", event);
+								};
+								writer.onerror = function() {
+									var error = writer.error;
+									if (error.code !== error.ABORT_ERR) {
+										fs_error();
+									}
+								};
+								"writestart progress write abort".split(" ").forEach(function(event) {
+									writer["on" + event] = filesaver["on" + event];
+								});
+								writer.write(blob);
+								filesaver.abort = function() {
+									writer.abort();
+									filesaver.readyState = filesaver.DONE;
+								};
+								filesaver.readyState = filesaver.WRITING;
+							}), fs_error);
+						}), fs_error);
+					};
+					dir.getFile(name, {create: false}, abortable(function(file) {
+						// delete file if it already exists
+						file.remove();
+						save();
+					}), abortable(function(ex) {
+						if (ex.code === ex.NOT_FOUND_ERR) {
+							save();
+						} else {
+							fs_error();
+						}
+					}));
+				}), fs_error);
+			}), fs_error);
+		}
+		, FS_proto = FileSaver.prototype
+		, saveAs = function(blob, name) {
+			return new FileSaver(blob, name);
+		}
+	;
+	FS_proto.abort = function() {
+		var filesaver = this;
+		filesaver.readyState = filesaver.DONE;
+		dispatch(filesaver, "abort");
+	};
+	FS_proto.readyState = FS_proto.INIT = 0;
+	FS_proto.WRITING = 1;
+	FS_proto.DONE = 2;
+
+	FS_proto.error =
+	FS_proto.onwritestart =
+	FS_proto.onprogress =
+	FS_proto.onwrite =
+	FS_proto.onabort =
+	FS_proto.onerror =
+	FS_proto.onwriteend =
+		null;
+
+	view.addEventListener("unload", process_deletion_queue, false);
+	saveAs.unload = function() {
+		process_deletion_queue();
+		view.removeEventListener("unload", process_deletion_queue, false);
+	};
+	return saveAs;
+}(
+	   typeof self !== "undefined" && self
+	|| typeof window !== "undefined" && window
+	|| this.content
+));
+// `self` is undefined in Firefox for Android content script context
+// while `this` is nsIContentFrameMessageManager
+// with an attribute `content` that corresponds to the window
+
+if (typeof module !== "undefined" && module !== null) {
+  module.exports = saveAs;
+} else if ((typeof define !== "undefined" && define !== null) && (define.amd != null)) {
+  define([], function() {
+    return saveAs;
+  });
+}
+
+  </script>
+<!--  <script src="controller.js"></script>-->
+<script type="text/javascript">
+  /**
+**Author: Umesh Narayana Menon
+**Last Updated: June 05, 2014
+**With help from the links http://simonsarris.com/blog/225-canvas-selecting-resizing-shape and http://www.dbp-consulting.com/tutorials/canvas/CanvasArrow.html
+*/
+var configData=[];
+var jsonConfig;
+var formulaArr=[];
+var formulaValArr=[];
+var nonInitialProbsFmla=[];
+var nonInitialProbsVal=[];
+
+var globalCounter=0;
+var gblLineId=0;
+var gblNodes = []; 
+var arcs=[];
+// Constructor for Shape objects to hold data for all drawn objects.
+// For now they will just be defined as rectangles.
+var selectionColor = '#CCCCCC';
+// The node (if any) being selected.
+// If in the future we want to select multiple objects, this will get turned into an array
+var mySel = null;
+// The selection color and width. Right now we have a red selection with a small width
+var mySelColor = '#CCCCCC';//'#CC0000';
+var mySelWidth = 2;
+var mySelBoxColor = '#CCCCCC';//'darkred'; // New for selection boxes
+var mySelBoxSize = 6;
+var selectedNodes=[];
+var selectedArcs=[];
+// New, holds the 8 tiny boxes that will be our selection handles
+// the selection handles will be in this order:
+// 0  1  2
+// 3     4
+// 5  6  7
+var selectionHandles = [];
+var canvasState;
+//*******************SHAPE RELATED FUNCTIONS START**************************//
+function Node(x,y,r,id,fill,stroke){
+	this.x=x||0;
+	this.y=y||0;
+	this.r=r||10; //by default, radius is 10
+	//this.w=2*this.r;
+	//this.h=2*this.r;
+	this.fill=fill||'#FFFFFF';
+	this.stroke=stroke||'#58D3F7';
+	this.nodeId=(id===undefined || id===null)?getGUID():id;
+}
+
+	//draw the circle in the given context
+	Node.prototype.draw=function(ctx, optionalColor){
+	ctx.beginPath();
+	ctx.arc(this.x, this.y, this.r, 0, 2*Math.PI,false);
+	ctx.fillStyle = this.fill;
+	ctx.fill();
+	ctx.lineWidth=2;
+	ctx.strokeStyle=this.stroke;
+	ctx.stroke();
+	// draw selection
+    // this is a stroke along the box and also 8 new selection handles
+    if (mySel === this) {
+      ctx.strokeStyle = mySelColor;
+      ctx.lineWidth = mySelWidth;
+      //ctx.strokeRect(this.x,this.y,2,2);
+      // draw the boxes
+      
+      var half = mySelBoxSize / 2;
+      
+      //    0  
+      // 1     2
+      //    3   
+      
+      // top middle
+      selectionHandles[0].x = this.x-half;
+      selectionHandles[0].y = this.y-(this.r+half);
+	  //middle right
+      selectionHandles[1].x = this.x+(2*this.r)/2-half;
+      selectionHandles[1].y = this.y-half;
+	  //middle left
+	  selectionHandles[2].x = this.x-(this.r+half);
+      selectionHandles[2].y = this.y-half;
+	  //bottom middle
+      selectionHandles[3].x = this.x-half;
+      selectionHandles[3].y = this.y+(this.r-half);
+	   
+
+      ctx.fillStyle = mySelBoxColor;
+      for (var i = 0; i < 4; i ++) {
+        var cur = selectionHandles[i];
+        ctx.fillRect(cur.x, cur.y, mySelBoxSize, mySelBoxSize);
+      }
+	  ctx.strokeStyle='#58D3F7';
+    }
+	
+	//draw the title text
+	var configNode=getConfigNodeById(this.nodeId);
+	if (configNode!=undefined || configNode!=null){
+		var nodeName=configNode["name"];
+		ctx.fillStyle = "#000000";
+		ctx.font = "12px Sans-Serif";
+		ctx.fillText(nodeName,this.x-(ctx.measureText(nodeName).width/2), this.y+4);
+	}
+}
+
+// Determine if a point is inside the shape's bounds
+Node.prototype.contains = function(mx, my) {
+  // All we have to do is make sure the Mouse X,Y fall in the area between
+  // the shape's X and (X + Height) and its Y and (Y + Height)
+  return  (this.x-this.r <= mx) && (this.x +this.r >= mx) &&
+          (this.y-this.r <= my) && (this.y + this.r >= my);
+}
+
+
+function Arc(src, dest, id){
+	this.startPoint=null;
+	this.endPoint=null;
+	this.line=null;
+	this.src=src;
+	this.dest=dest;
+	this.id=(id===undefined || id===null)?autoIncrementArcId():id;
+}
+
+Arc.prototype.draw=function(context){
+	if (this.dest.y<=this.src.y && (this.dest.y>=(this.src.y-this.src.r))){
+		if (this.dest.x<this.src.x){
+			this.startPoint=new Point(this.src.x-this.src.r, this.src.y);
+			this.endPoint=new Point(this.dest.x+this.dest.r,this.dest.y);
+		}else{
+			this.startPoint=new Point(this.src.x+this.src.r, this.src.y);
+			this.endPoint=new Point(this.dest.x-this.dest.r,  this.dest.y);
+		}
+	}else if (this.dest.y<(this.src.y-this.src.r) && this.dest.y>=(this.src.y-(2*this.src.r))){
+		if ((this.dest.x+this.dest.r) >= (this.src.x-this.src.r)){
+			this.startPoint=new Point(this.src.x, this.src.y-this.src.r);
+			this.endPoint=new Point(this.dest.x, this.dest.y+this.dest.r);
+		}else{
+			this.startPoint=new Point(this.src.x-this.src.r, this.src.y);
+			this.endPoint=new Point(this.dest.x, this.dest.y+this.dest.r);
+		}
+	}else if(this.dest.y<(this.src.y-this.src.r)){
+		this.startPoint=new Point(this.src.x, this.src.y-this.src.r);
+		this.endPoint=new Point(this.dest.x, this.dest.y+this.dest.r);
+	}else if (this.dest.y>this.src.y && this.dest.y<=this.src.y+this.src.r){
+		if (this.dest.x<this.src.x){
+			this.startPoint=new Point(this.src.x-this.src.r, this.src.y);
+			this.endPoint=new Point(this.dest.x+this.dest.r,this.dest.y);
+		}else{
+			this.startPoint=new Point(this.src.x+this.src.r, this.src.y);
+			this.endPoint=new Point(this.dest.x-this.dest.r, this.dest.y);
+		}
+	}else if(this.dest.y>=this.src.y){
+		this.startPoint=new Point(this.src.x, this.src.y+this.src.r);
+		this.endPoint=new Point(this.dest.x, this.dest.y-this.dest.r);
+		/*
+		if ((this.dest.x+this.dest.r) >= (this.src.x-this.src.r)){
+			this.startPoint=new Point(this.src.x, this.src.y+this.src.r);
+			this.endPoint=new Point(this.dest.x, this.dest.y-this.dest.r);
+		}else{
+			this.startPoint=new Point(this.src.x-this.src.r, this.src.y);
+			this.endPoint=new Point(this.dest.x, this.dest.y-this.dest.r);
+		}
+		*/
+	}
+	this.line=new Line(this.startPoint, this.endPoint);
+	for (var i=0;i<selectedArcs.length;i++){
+		if (selectedArcs[i]===this){
+			context.strokeStyle = mySelColor;
+			context.lineWidth = mySelWidth;
+			//context.strokeRect(this.x,this.y,2,2);
+			// draw the boxes
+
+			var half = mySelBoxSize / 2;
+
+			//    0  
+			// 1     2
+			//    3   
+
+			//top end
+			selectionHandles[0].x = this.startPoint.x-half;
+			selectionHandles[0].y = this.startPoint.y-half;
+			//bottom end
+			selectionHandles[1].x = this.endPoint.x-half;
+			selectionHandles[1].y = this.endPoint.y-half;
+			//middle
+			selectionHandles[2].x = ((this.startPoint.x+this.endPoint.x)/2)-half;
+			selectionHandles[2].y = this.line.getY((this.startPoint.x+this.endPoint.x)/2)-half;
+
+			context.fillStyle = mySelBoxColor;
+			for (var i = 0; i < 3; i ++) {
+			var cur = selectionHandles[i];
+				context.fillRect(cur.x, cur.y, mySelBoxSize, mySelBoxSize);
+			}
+			
+		}
+	}
+	this.line.draw(context);
+	
+	//draw arrow heads
+	var angle=Math.PI/8;
+	var d=10;
+	var x0=this.endPoint.x;
+	var y0=this.endPoint.y;
+	//calculate the angle of the line
+	var lineangle=Math.atan2(y0-this.startPoint.y, x0-this.startPoint.x);
+	
+	// h is the line length of a side of the arrow head
+	var h=Math.abs(d/Math.cos(angle));
+	var angle1=lineangle+Math.PI+angle;
+	//var angle1=lineangle+angle;
+	var topx=x0+Math.cos(angle1)*h;
+	var topy=y0+Math.sin(angle1)*h;
+	var angle2=lineangle+Math.PI-angle;
+	//var angle2=lineangle-angle;
+	var botx=x0+Math.cos(angle2)*h;
+	var boty=y0+Math.sin(angle2)*h;
+	var radius=3;
+	var twoPI=2*Math.PI;
+
+	// all cases do this.
+	context.save();
+	context.beginPath();
+	context.moveTo(topx,topy);
+	context.lineTo(x0,y0);
+	context.lineTo(botx,boty);
+	var cpx=(topx+x0+botx)/3;
+    var cpy=(topy+y0+boty)/3;
+    context.quadraticCurveTo(cpx,cpy,topx,topy);
+	context.fillStyle='#58D3F7';
+	context.strokeStyle='#58D3F7';
+    context.fill();
+	
+	context.fillStyle='#FFFFFF';  
+	context.strokeStyle='#58D3F7';
+}
+
+Arc.prototype.contains = function(mx, my) {
+	return this.line.contains(mx, my);
+}
+
+var Point=function(x,y){
+	this.x=x;
+	this.y=y;
+}
+
+function Line(start, end){
+	this.start=start;
+	this.end=end;
+}
+
+Line.prototype.draw=function(context){
+	context.moveTo(this.start.x, this.start.y);
+	context.lineTo(this.end.x, this.end.y);
+	context.stroke();
+}
+
+Line.prototype.contains = function(mx, my) {
+	if (this.start.x>this.end.x){
+		if (mx>this.start.x || mx<this.end.x) return false;
+	}else{
+		if (mx>this.end.x || mx<this.start.x) return false;
+	}
+	var y=this.getY(mx);
+	//give a 60% margin or tolerance
+	//if (y==my) return true;
+	if (0.4*y<=my && 1.6*y>=my) return true;
+	return false;
+}
+
+Line.prototype.getY=function (x){
+	var y1=this.start.y;
+	var y2=this.end.y;
+	var x1=this.start.x;
+	var x2=this.end.x;
+	var m=(y1-y2)/(x1-x2);
+	var c=y2-(m*x2)
+	var y=m*x+c;
+	return y;
+}
+
+// Box object to hold data
+function Box() {
+  this.x = 0;
+  this.y = 0;
+  this.w = 1; // default width and height?
+  this.h = 1;
+  this.fill = '#444444';
+}
+
+// New methods on the Box class
+Box.prototype = {
+  // we used to have a solo draw function
+  // but now each box is responsible for its own drawing
+  // mainDraw() will call this with the normal canvas
+  // myDown will call this with the ghost canvas with 'black'
+  draw: function(context, optionalColor) {
+      if (context === gctx) {
+        context.fillStyle = 'black'; // always want black for the ghost canvas
+      } else {
+        context.fillStyle = this.fill;
+      }
+      
+      // We can skip the drawing of elements that have moved off the screen:
+      if (this.x > WIDTH || this.y > HEIGHT) return; 
+      if (this.x + this.w < 0 || this.y + this.h < 0) return;
+      
+      context.fillRect(this.x,this.y,this.w,this.h);
+    
+    
+  } // end draw
+
+}
+
+function CanvasState(canvas) {
+  // **** First some setup! ****
+  
+  this.canvas = canvas;
+  this.width = canvas.width;
+  this.height = canvas.height;
+  this.ctx = canvas.getContext('2d');
+
+  
+  // This complicates things a little but but fixes mouse co-ordinate problems
+  // when there's a border or padding. See getMouse for more detail
+  var stylePaddingLeft, stylePaddingTop, styleBorderLeft, styleBorderTop;
+  if (document.defaultView && document.defaultView.getComputedStyle) {
+    this.stylePaddingLeft = parseInt(document.defaultView.getComputedStyle(canvas, null)['paddingLeft'], 10)      || 0;
+    this.stylePaddingTop  = parseInt(document.defaultView.getComputedStyle(canvas, null)['paddingTop'], 10)       || 0;
+    this.styleBorderLeft  = parseInt(document.defaultView.getComputedStyle(canvas, null)['borderLeftWidth'], 10)  || 0;
+    this.styleBorderTop   = parseInt(document.defaultView.getComputedStyle(canvas, null)['borderTopWidth'], 10)   || 0;
+  }
+  // Some pages have fixed-position bars (like the stumbleupon bar) at the top or left of the page
+  // They will mess up mouse coordinates and this fixes that
+  var html = document.body.parentNode;
+  this.htmlTop = html.offsetTop;
+  this.htmlLeft = html.offsetLeft;
+
+  // **** Keep track of state! ****
+  
+  this.valid = false; // when set to false, the canvas will redraw everything
+  this.nodes = [];  // the collection of things to be drawn
+  this.dragging = false; // Keep track of when we are dragging
+  // the current selected object. In the future we could turn this into an array for multiple selection
+  this.selection = null;
+
+  this.dragoffx = 0; // See mousedown and mousemove events for explanation
+  this.dragoffy = 0;
+  //arcs=[];
+  // **** Then events! ****
+  
+  // This is an example of a closure!
+  // Right here "this" means the CanvasState. But we are making events on the Canvas itself,
+  // and when the events are fired on the canvas the variable "this" is going to mean the canvas!
+  // Since we still want to use this particular CanvasState in the events we have to save a reference to it.
+  // This is our reference!
+  var myState = this;
+  
+  //fixes a problem where double clicking causes text to get selected on the canvas
+  canvas.addEventListener('selectstart', function(e) { e.preventDefault(); return false; }, false);
+  // Up, down, and move are for dragging
+  canvas.addEventListener('mousedown', function(e) {
+    var mouse = myState.getMouse(e);
+    var mx = mouse.x;
+    var my = mouse.y;
+    var nodes = myState.nodes;
+    var l = nodes.length;
+	var parentId;
+	var childId;
+	refreshPropertySheet(null);
+    for (var i = l-1; i >= 0; i--) {
+      if (nodes[i].contains(mx, my)) {
+        mySel = nodes[i];
+		selectedNodes.push(mySel);
+		if (event.ctrlKey==1) {
+			parentId=selectedNodes[0].nodeId;
+			childId=mySel.nodeId;
+			addChildren(parentId, childId);
+			addParent(childId, parentId);
+			saveConfigDefaults(mySel.nodeId);
+		}else{
+			selectedNodes=[];
+			selectedNodes.push(mySel);
+			selectedArcs=[];
+		}
+		
+		
+        // Keep track of where in the object we clicked
+        // so we can move it smoothly (see mousemove)
+        myState.dragoffx = mx - mySel.x;
+        myState.dragoffy = my - mySel.y;
+		
+        myState.dragging = true;
+        myState.selection = mySel;
+
+		if (selectedNodes.length==2){
+			var node1=selectedNodes[0];
+			var node2=selectedNodes[1];
+			createArc(node1, node2);
+		}else{
+			//if only one node is selected then display the property sheet
+			refreshPropertySheet(mySel.nodeId);
+		}
+        myState.valid = false;
+        return;
+      }
+    }
+	
+	//check for arcs
+	var al=arcs.length;
+	var arcSelected=false;
+	for (var i = al-1; i >= 0; i--) {
+		//var id=arcs[i].id;
+		if (arcs[i].contains(mx, my)) {
+			selectedArcs.push(arcs[i]);
+			arcSelected=true;
+			myState.selection = arcs[i];
+			//mySel=null;
+			selectedNodes=[];
+			myState.valid = false;
+			return;
+		}
+	}
+
+	
+    // havent returned means we have failed to select anything.
+    // If there was an object selected, we deselect it
+    if (myState.selection) {
+	//if (myState.selection && arcSelected==false) {
+      myState.selection = null;
+	  selectedNodes=[];
+	  selectedArcs=[];
+      myState.valid = false; // Need to clear the old selection border
+    }
+	  // havent returned means we have selected nothing
+	  mySel = null;
+	//selection new ends
+  }, true);
+  canvas.addEventListener('mousemove', function(e) {
+    if (myState.dragging){
+      var mouse = myState.getMouse(e);
+      // We don't want to drag the object by its top-left corner, we want to drag it
+      // from where we clicked. Thats why we saved the offset and use it here
+      myState.selection.x = mouse.x - myState.dragoffx;
+      myState.selection.y = mouse.y - myState.dragoffy;
+		/*
+		for(var i=0;i<selectedNodes.length;i++){
+			if (myState.selection===selectedNodes[i]){
+				
+			}else{
+				selectedNodes[i].x = mouse.x - myState.dragoffx-selectedNodes[i].x;
+				selectedNodes[i].y = mouse.y - myState.dragoffy-selectedNodes[i].y;
+			}
+		}
+		*/
+      myState.valid = false; // Something's dragging so we must redraw
+    }
+  }, true);
+  canvas.addEventListener('mouseup', function(e) {
+    myState.dragging = false;
+  }, true);
+  // double click for making new nodes
+  canvas.addEventListener('dblclick', function(e) {
+    var mouse = myState.getMouse(e);
+    myState.addNode(new Node(mouse.x - 10, mouse.y - 10, 30)); //'rgba(0,255,0,.6)'
+  }, true);
+  
+  canvas.addEventListener('keyup', function(e) {
+    var kc = e.keyCode;
+  }, true);
+  // **** Options! ****
+  
+  //this.selectionColor = '#CCCCCC';
+  this.selectionWidth = 2;  
+  this.interval = 30;
+  setInterval(function() { myState.draw(); }, myState.interval);
+}
+
+CanvasState.prototype.addNode = function(node) {
+	//let's add this to config data
+	addToConfig();
+	this.nodes.push(node);
+	var configNode=getConfigNodeById(node.nodeId);
+	configNode["x"]=node.x;
+	configNode["y"]=node.y;
+	gblNodes=this.nodes;
+	this.valid = false;
+}
+
+CanvasState.prototype.clear = function() {
+  this.ctx.clearRect(0, 0, this.width, this.height);
+}
+
+// While draw is called as often as the INTERVAL variable demands,
+// It only ever does something if the canvas gets invalidated by our code
+CanvasState.prototype.draw = function() {
+  // if our state is invalid, redraw and validate!
+  if (!this.valid) {
+    var ctx = this.ctx;
+	this.nodes=gblNodes;
+    var nodes = this.nodes;
+    this.clear();
+    
+    // ** Add stuff you want drawn in the background all the time here **
+    
+    // draw all shapes
+	
+    var l = nodes.length;
+    for (var i = 0; i < l; i++) {
+      var node = nodes[i];
+      // We can skip the drawing of elements that have moved off the screen:
+      if (node.x > this.width || node.y > this.height ||
+          node.x + node.w < 0 || node.y + node.h < 0) continue;
+		nodes[i].draw(ctx);
+		var configNode=getConfigNodeById(node.nodeId);
+		configNode["x"]=node.x;
+		configNode["y"]=node.y;
+    }
+	
+	//Draw arcs
+	var al=arcs.length;
+	for (var i = 0; i < al; i++) {
+      var arc = arcs[i];
+	  arc.draw(ctx);
+	}
+	
+    // draw selection
+    // right now this is just a stroke along the edge of the selected node
+    if (this.selection != null) {
+      ctx.strokeStyle = selectionColor;//mySelColor;
+      ctx.lineWidth = this.selectionWidth;
+      var mySel = this.selection;
+	  ctx.beginPath();
+	  ctx.arc(mySel.x,mySel.y,mySel.r,0,2*Math.PI,false);
+	  ctx.stroke();
+	  //ctx.lineWidth=2;
+	  ctx.strokeStyle='#58D3F7';	
+    }
+	
+	//draw 4 squares to highlight the selection of node
+	for (var i=0;i<selectedNodes.length;i++){
+		var curNode=selectedNodes[i];
+		if (curNode===this.selection){
+		}else{
+		  ctx.strokeStyle = selectionColor;//mySelColor;
+		  ctx.lineWidth = this.selectionWidth;
+		  ctx.beginPath();
+		  ctx.arc(curNode.x,curNode.y,curNode.r,0,2*Math.PI,false);
+		  ctx.stroke();
+		  //ctx.lineWidth=2;
+		  ctx.strokeStyle = mySelColor;
+		  ctx.lineWidth = mySelWidth;
+		  //ctx.strokeRect(this.x,this.y,2,2);
+		  // draw the boxes
+		  
+		  // set up the selection handle boxes
+		  var selHandles=[];
+		  for (var i = 0; i < 4; i ++) {
+			var rect = new Box;
+			selHandles.push(rect);
+		  }
+		  
+		  var half = mySelBoxSize / 2;
+		  //    0  
+		  // 1     2
+		  //    3   
+		  
+		  // top middle
+		  selHandles[0].x = curNode.x-half;
+		  selHandles[0].y = curNode.y-(curNode.r+half);
+		  //middle right
+		  selHandles[1].x = curNode.x+(2*curNode.r)/2-half;
+		  selHandles[1].y = curNode.y-half;
+		  //middle left
+		  selHandles[2].x = curNode.x-(curNode.r+half);
+		  selHandles[2].y = curNode.y-half;
+		  //bottom middle
+		  selHandles[3].x = curNode.x-half;
+		  selHandles[3].y = curNode.y+(curNode.r-half);
+		  
+		  ctx.fillStyle = mySelBoxColor;
+		  for (var i = 0; i < 4; i ++) {
+			var cur = selHandles[i];
+			ctx.fillRect(cur.x, cur.y, mySelBoxSize, mySelBoxSize);
+		  }
+	  
+		  ctx.strokeStyle='#58D3F7';
+		}
+	}
+	
+    // ** Add stuff you want drawn on top all the time here **
+
+    this.valid = true;
+  }
+}
+
+
+// Creates an object with x and y defined, set to the mouse position relative to the state's canvas
+// If you wanna be super-correct this can be tricky, we have to worry about padding and borders
+CanvasState.prototype.getMouse = function(e) {
+  var element = this.canvas, offsetX = 0, offsetY = 0, mx, my;
+  
+  // Compute the total offset
+  if (element.offsetParent !== undefined) {
+    do {
+      offsetX += element.offsetLeft;
+      offsetY += element.offsetTop;
+    } while ((element = element.offsetParent));
+  }
+
+  // Add padding and border style widths to offset
+  // Also add the <html> offsets in case there's a position:fixed bar
+  offsetX += this.stylePaddingLeft + this.styleBorderLeft + this.htmlLeft;
+  offsetY += this.stylePaddingTop + this.styleBorderTop + this.htmlTop;
+
+  mx = e.pageX - offsetX;
+  my = e.pageY - offsetY;
+  
+  // We return a simple javascript object (a hash) with x and y defined
+  return {x: mx, y: my};
+}
+
+
+function autoIncrementArcId(){
+	gblLineId=gblLineId+1;
+	return gblLineId;
+}
+
+function getNodeById(nodeId){
+	var l = gblNodes.length;
+    for (var i = 0; i < l; i++) {
+      var node = gblNodes[i];
+	  if (nodeId==node.nodeId) return node;
+	}
+	return null;
+}
+
+function getArcById(id){
+	var al=arcs.length;
+	for (var i=0;i<al;i++){
+		if (arcs[i].id==id) {
+			return arcs[i];
+		}
+	}
+	return null;
+}
+//**************************SHAPE RELATED FUNCTIONS END*********************************//
+
+//**************************DATA RELATED FUNCTIONS START*********************************//
+
+function addToConfig(){
+	var node={};
+	node["nodeId"]=globalCounter;
+	node["name"]="node" + globalCounter;
+	node["desc"]="";
+	node["values"]="0,1";
+	node["values_array"]=node["values"].split(',');
+	node["prior"]=[];
+	node["conditional"]=[];
+	node["posterior"]="";
+	node["value"]="";
+	node["parents"]=[];
+	node["siblings"]=[];
+	node["children"]=[];
+	node["arcIds"]=[];
+	node["x"]=0;
+	node["y"]=0;
+	configData[0]["nodes"].push(node);
+}
+
+function getGUID(){
+	globalCounter=globalCounter+1;
+	return globalCounter;
+}
+
+
+function addChildren(nodeId, childId){
+	//jsonConfig=JSON.stringify(configData);
+	var nodes=configData[0]["nodes"];
+	var l=nodes.length;
+	var siblings=[];
+	for (var i=0;i<l;i++){
+		if (nodes[i].nodeId==nodeId){
+			var node=nodes[i];
+			siblings=node["children"]; //to use below
+			if (node["children"].indexOf(childId)>-1) return;
+			node["children"].push(childId);
+			break;
+		}
+	}
+	
+	//if (siblings!=null && siblings!='undefined'){
+	if (siblings.length>0){
+		for (var i=0;i<l;i++){
+			if (nodes[i].nodeId==childId){
+				var child=nodes[i];
+				//if (siblings.indexOf(childId)!=-1) siblings.splice(childId,1); //removing self reference locally
+				child["siblings"]=siblings;
+				break;
+			}
+		}
+	}
+}
+
+function addParent(childId, parentId){
+	//jsonConfig=JSON.parse(configData);
+	//var l=jsonConfig.nodes.length;
+	var nodes=configData[0]["nodes"];
+	var l=nodes.length;
+
+	for (var i=0;i<l;i++){
+		if (nodes[i].nodeId==childId){
+			var node=nodes[i];
+			if (node["parents"].indexOf(parentId)>-1) return;
+			node["parents"].push(parentId);
+			break;
+		}
+	}
+	
+	for (var i=0;i<l;i++){
+		if (nodes[i].nodeId==parentId){
+			var parent=nodes[i];
+			var children=parent["children"];
+			if (children.length>0){
+				for (var m=0;m<children.length;m++){
+					cId=children[m];
+					var child=getConfigNodeById(cId);
+					if (child.nodeId!=childId) child["siblings"].push(childId);
+				}
+			}
+			break;
+		}
+	}
+}
+
+function getConfigNodeById(nodeId){
+	var nodes=configData[0]["nodes"];
+	var l=nodes.length;
+	var node=null;
+	for (var i=0;i<l;i++){
+		if (nodes[i].nodeId==nodeId){
+			node=nodes[i];
+			return node;
+		}
+	}
+	return node;
+}
+
+function getArcNodeMapper(){
+	var nodes=configData[0]["nodes"];
+	var l=nodes.length;
+	var node=null;
+	var arcIds=[];
+	var arcs={};
+	for (var i=0;i<l;i++){
+		node=nodes[i];
+		var aIds=node["arcIds"];
+		for (var j=0;j<aIds.length;j++){
+			if (arcIds.indexOf(aIds[j])==-1) {
+				arcIds.push(aIds[j]);
+				arcs[aIds[j]]=[];
+			}	
+		}
+	}
+	//we got the arcIds with duplicates removed. Now check for corresponding nodes
+	for (var arc in arcs){
+		for (var i=0;i<l;i++){
+			node=nodes[i];
+			var aIds=node["arcIds"];
+			for (var j=0;j<aIds.length;j++){
+				if (arc==aIds[j]) arcs[arc].push(node);
+			}
+		}
+	}
+	return arcs;
+}
+
+
+function createArc(node1, node2, id){
+	var arc=new Arc(node1, node2, id);
+	//arc.draw(ctx);
+	arcs.push(arc);
+	selectedArcs.push(arc);
+	if (id===undefined || id===null){
+		addArc(node1.nodeId, arc.id);
+		addArc(node2.nodeId, arc.id);	
+	}
+}
+
+function addArc(nodeId, arcId){
+	var nodes=configData[0]["nodes"];
+	var l=nodes.length;
+
+	for (var i=0;i<l;i++){
+		if (nodes[i].nodeId==nodeId){
+			var node=nodes[i];
+			node["arcIds"].push(arcId);
+			break;
+		}
+	}
+	
+}
+
+function getArcsByNodeId(nodeId){
+	var nodes=configData[0]["nodes"];
+	var l=nodes.length;
+	for (var i=0;i<l;i++){
+		if (nodes[i].nodeId==nodeId){
+			var arcIds=nodes[i]["arcIds"];
+			return arcIds;
+		}
+	}
+	return null;
+}
+
+function removeNode(nodeId){
+	var nodes=configData[0]["nodes"];
+	var l=nodes.length;
+	for (var i=0;i<l;i++){
+		if (nodes[i].nodeId==nodeId){
+			/*
+			//check whether this node has any arcs, if yes then remove them too
+			var arcIds=nodes[i]["arcIds"];
+			if (arcIds.length>0){
+				for (var j=0; j<arcIds.length; j++){
+					//removeArc(arcIds[j]);
+					//not a good way, can be bettered by OOPS
+				}
+			}
+			*/
+			removeFromSiblings(nodeId);
+			removeFromChildren(nodeId);
+			nodes.splice(i,1);
+			break;
+		}
+	}
+}
+
+function removeArc(arcId){
+	var nodes=configData[0]["nodes"];
+	var l=nodes.length;
+	for (var i=0;i<l;i++){
+		for (var j=0;j<nodes[i]["arcIds"].length;j++){
+			if (nodes[i]["arcIds"][j]==arcId){
+				nodes[i]["arcIds"].splice(j,1);
+				break;
+			}
+		}
+	}
+}
+
+function removeFromSiblings(siblingId){
+	var nodes=configData[0]["nodes"];
+	var l=nodes.length;
+	var siblings;
+	for (var i=0;i<l;i++){
+		var node=nodes[i];
+		siblings=node["siblings"];
+		//if (siblings!=null && siblings!='undefined'){
+		if (siblings.length>0){
+			if (siblings.indexOf(siblingId)!=-1) siblings.splice(siblings.indexOf(siblingId), 1);
+		}
+	}
+}
+
+function removeFromChildren(childId){
+	var nodes=configData[0]["nodes"];
+	var l=nodes.length;
+	var children;
+	for (var i=0;i<l;i++){
+		var node=nodes[i];
+		children=node["children"];
+		//if (children!=null && children!='undefined'){
+		if (children.length>0){
+			if (children.indexOf(childId)!=-1) children.splice(children.indexOf(childId), 1);
+		}
+	}
+}
+
+function getInitialNodes(){
+	var nodes=configData[0]["nodes"];
+	var l=nodes.length;
+	var initialNodes=[]; 
+	for (var i=0;i<l;i++){
+		var node=nodes[i];
+		var parents=node["parents"];
+		if (parents.length==0) initialNodes.push(node);
+	}
+	return initialNodes;
+}
+
+function getNonInitialNodes(){
+	var nodes=configData[0]["nodes"];
+	var l=nodes.length;
+	var nonInitialNodes=[]; 
+	for (var i=0;i<l;i++){
+		var node=nodes[i];
+		var parents=node["parents"];
+		if (parents.length!=0) nonInitialNodes.push(node);
+	}
+	return nonInitialNodes;
+}
+
+
+function checkValuesExist(){
+	var nodes=configData[0]["nodes"];
+	var l=nodes.length;
+	for (var i=0;i<l;i++){
+		var node=nodes[i];
+		var val=node["value"];
+		if (val=="") return false; 
+	}
+	return true;
+}
+//****************************DATA RELATED FUNCTIONS END********************************//
+
+//****************************HTML PAGE ACTION FUNCTIONS START**************************//
+function exportConfig(){
+	try {
+		var isFileSaverSupported = !!new Blob;
+	} catch (e) {
+		return;
+	}
+	var d = new Date();
+	var t = d.getTime();
+	var jsonConfig=JSON.stringify(configData);
+	var blob = new Blob([jsonConfig], {type: "text/json;charset=utf-8"});
+	saveAs(blob, "config_"+t+".json");
+}
+
+function importConfig(content){
+	jsonConfig=JSON.parse(content);
+	configData=jsonConfig;
+	var nodes=jsonConfig[0]["nodes"];
+	gblNodes=[];
+	var l=nodes.length;
+	for (var i=0;i<l;i++){
+		var node=nodes[i];
+		gblNodes.push(new Node(node.x, node.y, 30, node["nodeId"]));
+	}
+	var arcIds=getArcNodeMapper();
+	for (var arcId in arcIds){
+		if (arcIds[arcId].length==2){
+			var node1=getNodeById(arcIds[arcId][0]["nodeId"]);
+			var node2=getNodeById(arcIds[arcId][1]["nodeId"]);
+			createArc(node1, node2, arcId);
+		}
+	}
+	refreshCanvas();
+}
+
+function clearSheet(){
+	var html='';
+	html="<div class=\"column\"> \
+			<ul class=\"key\"> \
+				<li>Name</li> \
+				<li>Description</li>\
+				<li>Possible Values</li>\
+				<li>Value</li>\
+				<li>Prior</li>\
+			</ul>\
+			<ul class=\"key\" id=\"dynamic_node_properties_key\" style=\"display:none\"></ul> \
+		</div>\
+		<div class=\"column\"> \
+			<ul class=\"val\"> \
+				<li><input type=\"text\" maxlength=\"5\" id=\"input_name\" value=\"\"/></li> \
+				<li><input type=\"text\" id=\"input_desc\" value=\"\"/></li> \
+				<li><input type=\"text\" id=\"input_values\" value=\"\"/></li> \
+				<li><input type=\"text\" id=\"input_value\" value=\"\"/></li> \
+				<li><input type=\"text\" id=\"input_prior\" value=\"\"/></li> \
+			</ul> \
+			<ul class=\"val\" id=\"dynamic_node_properties_val\" style=\"display:none\"></ul> \
+		</div>";
+	document.getElementById("node_property_sheet").innerHTML=html;
+}
+
+
+function refreshPropertySheet(nodeId){
+	var html='';
+	document.getElementById("node_property_sheet").innerHTML=html;
+
+	var node=getConfigNodeById(nodeId);
+	if (node!=null){
+		html="<div class=\"column\"> \
+			<ul class=\"key\"> \
+				<li>Name</li> \
+				<li>Description</li>\
+				<li>Possible Values</li>\
+				<li>Value</li>\
+			</ul>\
+			<ul class=\"key\" id=\"dynamic_node_properties_key\" style=\"display:none\"></ul> \
+		</div>\
+		<div class=\"column\"> \
+			<ul class=\"val\"> \
+				<li><input type=\"text\" maxlength=\"5\" id=\"input_name\" value=\"$name\"/></li> \
+				<li><input type=\"text\" id=\"input_desc\" value=\"$desc\"/></li> \
+				<li><input type=\"text\" id=\"input_values\" value=\"$values\"/></li> \
+				<li><input type=\"text\" id=\"input_value\" value=\"$value\"/></li> \
+			</ul> \
+			<ul class=\"val\" id=\"dynamic_node_properties_val\" style=\"display:none\"></ul> \
+		</div>";
+		html=html.replace('$name',node["name"]);
+		html=html.replace('$desc',node["desc"]);
+		html=html.replace('$values',node["values"]);
+		html=html.replace('$value', node["value"]);
+		//html=html.replace('$posterior',node["posterior"]);
+		document.getElementById("node_property_sheet").innerHTML=html;
+		
+		//construct the dynamic property list for conditional probabilities
+		var parents=node["parents"];
+		var key_html='';
+		var val_html='';
+		var own_values=node["values_array"];
+		if (parents.length>0){
+			var lblStrArr=getLabelStringArray();
+			var i=0;
+			for (var id in node["conditional"]){
+				//print only the value 1 if it is binary
+				if (checkBinaryValues(node)){
+					var vs=id.split("_");
+					if (vs[vs.length-1]==1){
+						key_html+='<li>'+lblStrArr[i]+'</li>';
+						val_html+='<li><input type="text" id="input'+ id +'" value="'+ parseNumber(node["conditional"][id]) +'"/></li>';
+					}
+				}else{
+					key_html+='<li>'+lblStrArr[i]+'</li>';
+					val_html+='<li><input type="text" id="input'+ id +'" value="'+ parseNumber(node["conditional"][id]) +'"/></li>';
+				}	
+				i++;
+			}
+		}else{
+			if (checkBinaryValues(node)){
+				key_html+='<li>P('+node.name+')</li>';
+				val_html+='<li><input type="text" id="input_1" value="'+ parseNumber(node["prior"][1]) +'" /></li>';
+			}else{
+				for (var m=0;m<own_values.length;m++){
+					key_html+='<li>P('+node.name+'='+own_values[m]+')</li>';
+					val_html+='<li><input type="text" id="input_'+own_values[m]+'" value="'+ parseNumber(node["prior"][own_values[m]]) +'" /></li>';
+				}
+			}
+		}
+		document.getElementById("dynamic_node_properties_key").innerHTML=key_html;
+		document.getElementById("dynamic_node_properties_key").style.display="block";
+		document.getElementById("dynamic_node_properties_val").innerHTML=val_html;
+		document.getElementById("dynamic_node_properties_val").style.display="block";		
+	}
+}
+
+function checkBinaryValues(node){
+	var values=node["values_array"];
+	var checksum=0;
+	for (var l=0;l<values.length;l++){
+		checksum+=values[l];
+	}
+	if (checksum==1) return true;
+	return false;
+}
+
+function saveConfigDefaults(nodeId){
+	if (nodeId==null) nodeId=mySel.nodeId;
+ 	var configNode=getConfigNodeById(nodeId);
+	var condlPrbs;
+	if (configNode!=null){
+		var prevValLength=configNode["values_array"].length;
+		configNode["values_array"]=configNode["values"].split(',');
+		var parents=configNode["parents"];
+		var own_values=configNode["values_array"];
+		var own_val_len=((prevValLength==own_values.length)?own_values.length:prevValLength);
+		configNode["conditional"]={}; //new Array();
+		if (parents.length>0){
+			idStrArr=getIdStringPart1(own_values, own_val_len, configNode);
+			arrStrArr=getArrStringPart1(own_values, own_val_len, configNode);
+			for (var i=0;i<parents.length;i++){
+				var parentId=parents[i];
+				idStrArr=getIdStringPart2(idStrArr, parentId);
+			}
+			for (var i=0;i<idStrArr.length;i++){
+				configNode["conditional"][idStrArr[i]]=0;
+			}
+			
+		}else{
+			configNode["prior"]={};//new Array();
+			for (var m=0;m<own_val_len;m++){
+				configNode["prior"][own_values[m]]=0;
+			}
+		}
+	}
+}
+
+function saveConfig(nodeId){
+	if (nodeId==null) nodeId=mySel.nodeId;
+ 	var configNode=getConfigNodeById(nodeId);
+	//var node=getNodeByNodeId(nodeId); //this is anyway same as mySel
+	if (configNode!=null){
+		configNode["name"]=document.getElementById("input_name").value;
+		configNode["desc"]=document.getElementById("input_desc").value;
+		configNode["value"]=parseNumber(document.getElementById("input_value").value);
+		configNode["values"]=document.getElementById("input_values").value;
+		var prevValLength=configNode["values_array"].length;
+		configNode["values_array"]=configNode["values"].split(',');
+		var parents=configNode["parents"];
+		var own_values=configNode["values_array"];
+		var own_val_len=((prevValLength==own_values.length)?own_values.length:prevValLength);
+		if (parents.length>0){
+			var bFound=false;
+			var prevId="";
+			for (var id in configNode["conditional"]){
+				if (checkBinaryValues(configNode)){
+					var vs=id.split("_");
+					var prob=0;
+					if (vs[vs.length-1]==0){
+						bFound=true;
+						prevId=id;
+					}else{
+						if (bFound){
+							prob=eval("parseNumber(document.getElementById(\"input"+id+"\").value)");
+							eval("configNode[\"conditional\"][\""+id + "\"]=prob");
+							eval("configNode[\"conditional\"][\""+prevId + "\"]=(1-prob)");
+						}
+					}
+					
+				}else{
+					eval("configNode[\"conditional\"][\""+id + "\"]=parseNumber(document.getElementById(\"input"+id+"\").value)");
+				}
+			}
+		}else{
+			var pVal=0;
+			var pValTotal=0;
+			if (checkBinaryValues(configNode)){
+				var pVal=parseNumber(document.getElementById("input_1").value);
+				if (pVal>1) pVal=1;
+				configNode["prior"][1]=pVal;
+				configNode["prior"][0]=1-pVal;
+			}else{
+				for (var m=0;m<own_val_len;m++){
+					//check whether priors add up to 1, if not adjust the last values so that user will not see any error messages
+					var pVal=parseNumber(document.getElementById("input_"+own_values[m]).value);
+					if (pVal>1) pVal=1;
+					var prevTot=pValTotal;
+					pValTotal+=pVal;
+					if (pValTotal>1) {
+						var newPVal=pVal-(pValTotal-1);
+						pValTotal=pValTotal-pVal+newPVal;
+						pVal=newPVal;
+					}else{
+						if (m==own_val_len-1) pVal=(1-prevTot);				
+					}		
+					configNode["prior"][own_values[m]]=parseNumber(roundTo(pVal,4));
+				}
+			}
+		}
+	}
+	refreshPropertySheet(nodeId);
+}
+
+
+function getIdStringPart1(own_values, own_val_len, node){
+	var arr=[];
+	/*
+	if (checkBinaryValues(node)){
+		arr.push("_1");
+	}else{
+		for (var m=0;m<own_val_len;m++){
+			arr.push("_"+ own_values[m]);
+		}
+	}
+	*/
+	for (var m=0;m<own_val_len;m++){
+		arr.push("_"+ own_values[m]);
+	}
+	return arr;
+}
+
+function getIdStringPart2(arr, parentId){
+	var parent=getConfigNodeById(parentId);
+	var values=parent["values_array"];
+	var result=[];
+	for (var l=0;l<values.length;l++){
+		for (var i=0; i< arr.length; i++){
+			result.push("_" + parent.nodeId + "|" + values[l] + arr[i]);
+		}	
+	}
+	return result;
+}
+
+function getArrStringPart1(own_values, own_val_len, node){
+	var arr=[];
+	/*
+	if (checkBinaryValues(node)){
+		arr.push("[1]");
+	}else{
+		for (var m=0;m<own_val_len;m++){
+			arr.push("["+own_values[m]+"]");
+		}
+	}
+	*/
+	for (var m=0;m<own_val_len;m++){
+		arr.push("["+own_values[m]+"]");
+	}
+	return arr;
+}
+
+function getLabelStringArray(){
+	var result=[];
+	var currentNode=getConfigNodeById(mySel.nodeId);
+	//last bit is the node value, all other bits are conditional values of parents
+	//So lets pick the last bit first
+	var lbl="";
+
+	for (var id in currentNode["conditional"]){
+		var arr1=id.split("_");
+		for (var i=0;i<arr1.length-1;i++){
+			var arr2=arr1[i].split("|");
+			var node=getConfigNodeById(arr2[0]);
+			if (node!=null){
+				if (checkBinaryValues(node)){
+					if (arr2[1]==0) lbl+="&not;";
+					lbl+=node.name;
+				}else{
+					lbl+=node.name +"="+arr2[1];
+				}
+				if (i<arr1.length-2) lbl+=",";
+			}
+		}
+		var currentLbl=checkBinaryValues(currentNode)?currentNode.name:currentNode.name+"="+arr1[arr1.length-1];
+		result.push("P("+ currentLbl + "|" + lbl + ")");
+		lbl="";
+	}
+	return result;
+}
+
+function calculate(){
+	//first check whether all the nodes have values. If yes calculate the probability of the configuration
+	//if not, calculate the probabilities of non initial nodes
+	var initialNodes=getInitialNodes();
+	var nonInitialNodes=getNonInitialNodes();
+	var initialProbabilities=[];
+	var conditionalProbabilities=[];
+	formulaArr=[];
+	formulaValArr=[];
+	if (checkValuesExist()){
+		//calculate initial probabilities
+		for (var i=0; i<initialNodes.length; i++){
+			var initialNode=initialNodes[i];
+			for (var prior in initialNode["prior"]){
+				if (prior==initialNode["value"]) {
+					initialProbabilities.push(initialNode["prior"][prior]);
+					formulaArr.push("P("+initialNode.name+"="+initialNode["value"]+")");
+					formulaValArr.push(initialNode["prior"][prior]);
+				}
+			}
+		}
+		
+		var formula=[];
+		var vals=[];
+		var fmlaHtml="";
+		var valHtml="";
+		var hdrHtml="";
+		var probs=[];
+		var nipHtml=""; //non-initialprobabilities html
+		nonInitialProbsFmla=[];
+		nonInitialProbsVal=[];
+		//calculate conditional probabilities
+		for (var j=0; j<nonInitialNodes.length; j++){
+			var nonInitialNode=nonInitialNodes[j];
+			conditionalProbabilities.push(getCndnlProbabilityForAValueGivenParentValue(nonInitialNode));
+			for (var k=0;k<nonInitialNode.values_array.length;k++){
+				var pval=nonInitialNode.values_array[k];
+				formula=[];
+				vals=[];
+				getProbabilityOfNonInitialNode(nonInitialNode, pval);
+				hdrHtml="<div class=\"result_line\">The probability of the non-initial node "+ nonInitialNode.name +" = "+ pval +" is :";
+				fmlaHtml="<div class=\"result_line formula\">";
+				valHtml="<div class=\"formula\">";
+				for (var i=0;i<nonInitialProbsFmla.length;i++){
+					var fmla=nonInitialProbsFmla[i];
+					var val=nonInitialProbsVal[i]; //this array also follows the same index order
+					
+					if (fmla!="+" && fmla!="*"){ //not a break so continue
+						formula.push(fmla);
+						vals.push(val);
+					}else if (fmla=="*"){
+						
+					}else{// a break
+						probs.push(arrayMultiply(vals));
+						fmlaHtml+=getFormulaBlock(formula, true);
+						valHtml+=getValBlock(vals, true);
+						formula=[];
+						vals=[];
+						if (i<nonInitialProbsFmla.length-1) {
+							fmlaHtml+=" + ";
+							valHtml+=" + ";
+						}	
+					}
+				}
+				fmlaHtml+="</div>";
+				valHtml+="</div>";
+				var prior=roundTo(arrayAdd(probs),4);
+				nonInitialNode["prior"][pval]=prior;
+				hdrHtml+=prior +"</div>";
+				nipHtml+=hdrHtml + fmlaHtml + valHtml;
+				probs=[];
+				formula=[];
+				vals=[];
+			}
+		}
+		var html="<div class=\"result_line\">The probability of the configuration is :" + roundTo(arrayMultiply(initialProbabilities) * arrayMultiply(conditionalProbabilities),4)+"</div>";
+
+		html+=getFormulaBlock(formulaArr, false);
+		html+=getValBlock(formulaValArr, false);
+		html+=nipHtml;
+	
+		document.getElementById("result").innerHTML=html;
+	}
+
+}
+
+function getFormulaBlock(arr, bContinuous){
+	var html="";
+	if (!bContinuous) html+="<div class=\"result_line formula\">";
+	for (var i=0; i<arr.length;i++){
+		html+=i==(arr.length-1)?arr[i]: arr[i] + " x "; 
+	}
+	if (!bContinuous) html+="</div>";
+	return html;
+}
+
+function getValBlock(arr, bContinuous){
+	var html="";
+	if (!bContinuous) html+="<div class=\"formula\">";
+	for (var i=0; i<arr.length;i++){
+		html+=i==(arr.length-1)?arr[i]: arr[i] + " x "; 
+	}
+	if (!bContinuous) html+="</div>";
+	return html;
+}
+
+function getProbabilityOfNonInitialNode(nonInitialNode, val){
+	//last bit is the node value, all other bits are conditional values of parents
+	//So lets pick the last bit first
+	var lbl="";
+	var result=0;
+	var lblArr=[];
+	//initialize
+	lblArr.push("");
+	nonInitialProbsFmla=[];
+	nonInitialProbsVal=[];
+	//taking the reverse order since we are storing the conditional probability in the reverse order of parents array
+	for (var i=nonInitialNode["parents"].length-1; i>=0;i--){
+		var parent=getConfigNodeById(nonInitialNode["parents"][i]);
+		var localArr=[];
+		for (j=0;j<parent.values_array.length;j++){
+			var parentVal=parent.values_array[j];
+			for (m=0;m<lblArr.length;m++){
+				localArr.push(lblArr[m]+"_" + parent.nodeId + "|" + parentVal);
+			}
+		}
+		lblArr=localArr;
+	}
+	//last bit is the current node value
+	//if last bit is 0 we have to subtract from 1 because we are storing only for 1
+	for (var i=0;i<lblArr.length;i++){
+		lbl=lblArr[i];
+		/*
+		if (checkBinaryValues(nonInitialNode)){
+			lbl+="_1";
+			if (nonInitialNode.value==0){
+				result=1-nonInitialNode["conditional"][lbl];
+			}else{
+				result=nonInitialNode["conditional"][lbl];
+			}
+		}else{
+			lbl+="_"+nonInitialNode.value;
+			result=nonInitialNode["conditional"][lbl];
+		}
+		*/
+		result=val==1?parseNumber(nonInitialNode["conditional"][lbl+"_1"]):1-parseNumber(nonInitialNode["conditional"][lbl+"_1"]);
+		result=parseNumber(roundTo(result, 4));
+		lbl+="_"+val;
+		
+		
+		nonInitialProbsFmla.push(getLabelForFormula(lbl, nonInitialNode["name"], val));
+		getPriorProbabilitiesFormula(lbl);
+		nonInitialProbsFmla.push("+"); //a breaker
+		nonInitialProbsVal.push(result);
+		getPriorProbabilitiesVals(lbl);
+		nonInitialProbsVal.push("+");//a breaker
+	}
+}
+
+function getPriorProbabilitiesFormula(idStr){
+	var result;
+	//last bit is the node value, all other bits are conditional values of parents
+	//So lets pick the last bit first
+	var lbl="";
+	
+	var arr1=idStr.split("_");
+	for (var i=0;i<arr1.length-1;i++){
+			var arr2=arr1[i].split("|");
+		var node=getConfigNodeById(arr2[0]);
+		if (node!=null){
+			nonInitialProbsFmla.push("*"); //a breaker
+			nonInitialProbsFmla.push("P("+node.name+"="+arr2[1]+")");
+		}
+	}
+}
+
+function getPriorProbabilitiesVals(idStr){
+	var result;
+	//last bit is the node value, all other bits are conditional values of parents
+	//So lets pick the last bit first
+	var lbl="";
+	
+	var arr1=idStr.split("_");
+	for (var i=0;i<arr1.length-1;i++){
+		var arr2=arr1[i].split("|");
+		var node=getConfigNodeById(arr2[0]);
+		if (node!=null){
+			nonInitialProbsVal.push("*");//a breaker
+			nonInitialProbsVal.push(node["prior"][arr2[1]]);
+		}
+	}
+}
+ 
+function getCndnlProbabilityForAValueGivenParentValue(nonInitialNode){
+	//last bit is the node value, all other bits are conditional values of parents
+	//So lets pick the last bit first
+	var lbl="";
+	var result=0;
+	//taking the reverse order since we are storing the conditional probability in the reverse order of parents array
+	for (var i=nonInitialNode["parents"].length-1; i>=0;i--){
+		var parent=getConfigNodeById(nonInitialNode["parents"][i]);
+		lbl+="_" + parent.nodeId + "|" + parent.value;
+	}
+	//last bit is the current node value
+	//if last bit is 0 we have to subtract from 1 because we are storing only for 1
+	if (checkBinaryValues(nonInitialNode)){
+		lbl+="_1";
+		if (nonInitialNode.value==0){
+			result=1-nonInitialNode["conditional"][lbl];
+		}else{
+			result=nonInitialNode["conditional"][lbl];
+		}
+	}else{
+		lbl+="_"+nonInitialNode.value;
+		result=nonInitialNode["conditional"][lbl];
+	}
+	formulaArr.push(getLabelForFormula(lbl, nonInitialNode.name, nonInitialNode.value));
+	formulaValArr.push(result);
+	return result;
+}
+
+function getLabelForFormula(idStr, name, val){
+	var result;
+	//last bit is the node value, all other bits are conditional values of parents
+	//So lets pick the last bit first
+	var lbl="";
+	
+	var arr1=idStr.split("_");
+	for (var i=0;i<arr1.length-1;i++){
+		var arr2=arr1[i].split("|");
+		var node=getConfigNodeById(arr2[0]);
+		if (node!=null){
+			if (checkBinaryValues(node)){
+				if (arr2[1]==0) lbl+="&not;";
+				lbl+=node.name;
+			}else{
+				lbl+=node.name +"="+arr2[1];
+			}
+			if (i<arr1.length-2) lbl+=",";
+		}
+	}
+	
+	//var currentLbl=checkBinaryValues(currentNode)?currentNode.name:currentNode.name+"="+arr1[arr1.length-1];
+	var currentLbl=name+"="+ val;
+	result="P("+ currentLbl + "|" + lbl + ")";
+	
+	return result;
+}
+
+window.addEventListener('keyup',deleteNode,true);
+function deleteNode(e){
+	if (e.keyCode==46){
+		for (var i=selectedNodes.length-1;i>=0;i--){
+			for (var j = gblNodes.length-1; j >= 0; j--) {
+				if (gblNodes[j].nodeId==selectedNodes[i].nodeId) {
+					var delNodeId=gblNodes[j].nodeId;
+					//check whether this node has any arcs, if yes then remove them too
+					//I could have made it as OOP by creating node object and taking its arcs property
+					var arcIds=getArcsByNodeId(delNodeId);
+					if (arcIds.length>0){
+						for (var m=0; m<arcIds.length;m++){
+							var arc=getArcById(arcIds[m]);
+							if (arc!=null && arc!='undefined') selectedArcs.push(arc);
+						}
+					}
+					gblNodes.splice(j,1);
+					//remove from the configData
+					//I could have made it as OOP by creating node object and calling its delete property
+					removeNode(delNodeId);
+					//break;
+				}
+			}
+		}
+		/*
+		if (mySel!=null){
+			for (var i = gblNodes.length-1; i >= 0; i--) {
+				if (gblNodes[i].nodeId==mySel.nodeId) {
+					var delNodeId=gblNodes[i].nodeId;
+					gblNodes.splice(i,1);
+					//remove from the configData
+					removeNode(delNodeId);
+					break;
+				}
+			}
+		}
+		*/
+		//if arcs are selected, delete them
+		for (var i=selectedArcs.length-1;i>=0;i--){
+			var al=arcs.length;
+			for (var n=0;n<al;n++){
+				if (arcs[n]===selectedArcs[i]) {
+					var delArcId=arcs[n].id;
+					arcs.splice(n,1);
+					//remove from the configData
+					removeArc(delArcId);
+					break;
+				}
+			}
+		}
+		refreshCanvas();
+		clearSheet();
+	}
+  }
+  
+function refreshCanvas(){
+	selectedNodes=[];
+	selectedArcs=[];
+	canvasState.valid = false;
+	canvasState.selection = null;
+	mySel=null;
+	canvasState.draw();
+}
+
+//****************************HTML PAGE ACTION FUNCTIONS START**************************//
+
+//****************************UTILITY FUNCTIONS START***********************************//
+function parseNumber(val){
+	return parseFloat((val===undefined || val===null || val=="" || isNaN(val))?0:val);
+}
+
+function fixFloatingPoint(num){
+	return (Math.round((num + 0.00000000000000001) * 100) / 100);
+}
+
+function roundTo(num, precision){
+	//return num.substring(1, num.indexOf(".")+1+precision);
+	//return (num==0)?num:num.toPrecision(precision);
+	return (num==0)?num:num.toFixed(precision);
+}
+
+function arrayMultiply(arr){
+	var result=1;
+	for (var i=0; i<arr.length; i++){
+		result*=parseNumber(arr[i]);
+	}
+	return result;
+}
+
+function arrayAdd(arr){
+	var result=0;
+	for (var i=0; i<arr.length; i++){
+		result+=parseNumber(arr[i]);
+	}
+	return result;
+}
+
+//****************************UTILITY FUNCTIONS START***********************************//
+
+// If you dont want to use <body onLoad='init()'>
+// You could uncomment this init() reference and place the script reference inside the body tag
+//init();
+
+function init() {
+
+	//let's initiate our config data
+	var nodes={};
+	nodes["nodes"]=[];
+	configData.push(nodes);
+	
+	  canvasState = new CanvasState(document.getElementById('canvas_bayes'));
+	  canvasState.addNode(new Node(460,120,30)); // The default is gray
+	  //canvasState.addNode(new Node(290,140,30, 'lightskyblue'));
+	  // Lets make some partially transparent
+	  //canvasState.addNode(new Node(400,150,30, 'rgba(127, 255, 212, .5)'));
+	  //canvasState.addNode(new Node(525,80,30, 'rgba(245, 222, 179, .7)'));
+
+	  // set up the selection handle boxes
+	  for (var i = 0; i < 4; i ++) {
+		var rect = new Box;
+		selectionHandles.push(rect);
+	  }
+
+}
+
+</script>
+</body>
+</html>

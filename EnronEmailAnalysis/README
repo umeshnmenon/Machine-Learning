@@ -1,0 +1,16 @@
+﻿Steps to run the jobs:Main folder: /user/shared/SUV/
+Input data for the program: /user/shared/SUV/splits/
+Jar file: enron.jar
+Stage 1- Email Extraction:
+hadoop jar enron.jar enron.EmailExtractor /user/shared/SUV/splits/ <<destination folder>>
+
+Stage 2 – Social Network Extraction: 
+hadoop jar enron.jar enron.SocialNetworkExtractor <<destination folder of the Stage 1>> <<destination folder>>
+
+(This job will out two folders, one is temp and final. The temp folder contains the intermediate results of the job, final folder contains the results. Two results sets are produced according to the normalization methods, which are named by_max_wt and by_total_arcs respectively)
+
+Stage 3 – Degree Distribution:
+hadoop jar enron.jar enron.InDegreeDistribution  <<destination folder of stage 2>>/final/by_total_arcs/ <<destination folder>>
+hadoop jar enron.jar enron.OutDegreeDistribution <destination folder of stage 2>>/final/by_total_arcs/ <<destination folder>>
+
+*Important: Make sure to use the output files in the by_total_arcs folder for Stage 3. The folder by_max_wt contains .csv files maily meant for the Gephi visualization.
